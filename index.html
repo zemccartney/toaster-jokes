@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toaster Jokes Dot Com</title>
+
+    <link rel="stylesheet" type="text/css" href="slick-1.8.0/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="slick-1.8.0/slick/slick-theme.css"/>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="slick-1.8.0/slick/slick.min.js"></script>
+    <style>
+
+      /* TODO Switch to external stylesheet */
+      html {
+        font-size: 10px;
+      }
+
+      body {
+        background-color: silver;
+        font-family: "Georgia serif";
+      }
+
+      header, main, footer {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+      }
+
+      footer {
+        margin-top: 200px;
+      }
+
+      h1 {
+        font-size: 4.8rem;
+        color: brown;
+      }
+
+      p {
+        font-size: 2rem;
+      }
+
+      .setup {
+        color: wheat;
+        font-size: 3rem;
+        margin: auto;
+        margin-top: 10px;
+        width: 75%;
+      }
+
+      .joke {
+        height: 200px;
+      }
+
+      .punchline {
+        color: darkgoldenrod;
+        font-size: 2.25rem;
+      }
+
+      #toasting {
+        position: relative;
+        height: 700px;
+      }
+
+      #toaster, #toast, #plate {
+        position: absolute;
+      }
+
+      #toaster {
+        left: 0%;
+        top: 10%;
+        z-index: 10;
+      }
+
+      #toast {
+        top: 90px;
+        left: 10%;
+        top: 20%; /* desired height / containing block height */
+      }
+
+      #plate {
+        right: 0%;
+        top: 40%;
+      }
+
+      .toast-it {
+        animation-name: toasted;
+        animation-duration: 2s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes toasted {
+        0% {
+          top: 20%;
+        }
+        50% {
+          top: -35%;
+        }
+        75% {
+          z-index: 50;
+        }
+        100% {
+          top: 100%;
+          transform: scale(2);
+          z-index: 50;
+        }
+      }
+
+      #toastPunchline {
+        position: absolute;
+        top: 35%;
+        left: 20%;
+        width: 65%;
+        font-size: 1.6rem;
+        color: brown;
+      }
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Toaster Jokes</h1>
+    </header>
+    <main>
+
+      <section id="jokes">
+        <div class="joke">
+          <h3 class="setup">And the Lord Said Unto John, "Come forth and receive eternal life."</h3>
+          <p class="punchline"><em>But John came fifth and won a toaster.</em></p>
+        </div>
+        <div class="joke">
+          <h3 class="setup">Test 2</h3>
+          <p class="punchline">Punch 2</p>
+        </div>
+        <div class="joke">
+          <h3 class="setup">Test 3</h3>
+          <p class="punchline">Punch 3</p>
+        </div>
+      </section>
+
+      <section id="toasting">
+        <img id="toaster" width="500" height="500" src="toaster.svg" >
+        <div id="toast">
+          <img width="250" height="250" src="toast.png" >
+          <p id="toastPunchline"></p>
+        </div>
+        <img id="plate" src="plate_and_utensils.png" >
+        <!-- <button>Another Joke ;)</button> -->
+      </section>
+
+    </main>
+
+    <footer>
+      <p><em>An Incognito Moose, LSB Production</em></p>
+      <img width="100" height="102" src="incognito_moose.jpg" />
+    </footer>
+
+    <script>
+      $(document).ready(function(){
+
+        /*
+        Leadin always displayed; punchline displays after 2 seconds
+          Then, toast pops
+            When animation ends, remove the class / reset / ensure will play again
+            When that finishes, change slide (so no auto-play)
+
+        On punchline change, toast pops out of toaster (fast, slows, peaks, then faster back down)
+        */
+        // Declared out here b/c all slide content is cloned on slick init,
+        // so selection becomes unreliable
+
+        var punchlines = $(".punchline");
+        console.log(punchlines);
+
+        $("#jokes").on("init", function (event, slick) {
+
+            var currentPunchline = $(punchlines[0]);
+            currentPunchline.toggle();
+
+            window.setTimeout( function () {
+
+                currentPunchline.toggle(2, function () {
+
+                    $("#toastPunchline").text(currentPunchline.text());
+                    $("#toast").addClass("toast-it");
+                });
+
+            }, 1000);
+        });
+
+        $("#jokes").on("afterChange", function () {
+            window.setTimeout( function () {
+                $(".punchline").toggle(1);
+            }, 3000);
+        });
+
+        $("#jokes").on("beforeChange", function () {
+            $(".punchline").toggle();
+        });
+
+        $('#jokes').slick({
+            arrows: false,
+            draggable: false
+        });
+
+      });
+    </script>
+  </body>
+</html>
